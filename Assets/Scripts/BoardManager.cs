@@ -20,11 +20,18 @@ public class BoardManager : MonoBehaviour
     public Tile[] GroundTiles; // 바닥 타일들을 담아놓는 배열 (랜덤으로 선택할 수 있도록 배열로 저장)
     public Tile[] WallTiles;   // 벽 타일들을 담아놓는 배열
 
+    private Grid m_Grid; // 타일맵이 속한 그리드(Grid) 참조
+
+    public PlayerController player; // 플레이어 컨트롤러 참조
+
     // Start 함수: 게임이 시작될 때 한 번 실행되는 함수
     void Start()
     {
         // 현재 오브젝트(BoardManager)의 자식 오브젝트 중 Tilemap을 가져옴
         m_Tilemap = GetComponentInChildren<Tilemap>();
+
+        // 현재 오브젝트(BoardManager)의 자식 오브젝트 중 Grid를 가져옴
+        m_Grid = GetComponentInChildren<Grid>();
 
         // width * height 크기의 2차원 배열을 생성하여 맵의 정보를 저장할 준비를 함
         m_BoardData = new CellData[width, height];
@@ -59,11 +66,14 @@ public class BoardManager : MonoBehaviour
                 m_Tilemap.SetTile(new Vector3Int(x, y, 0), tile);
             }
         }
+
+        // 플레이어를 (1,1) 좌표에 생성 (보드 매니저를 넘겨줘서 맵 정보를 전달)
+        player.Spawn(this, new Vector2Int(1, 1));
     }
 
-    // Update 함수: 매 프레임마다 실행되지만, 현재 코드에서는 사용되지 않음
-    void Update()
+    // 특정 셀의 위치를 월드 좌표로 변환하는 함수
+    public Vector3 CellToWorld(Vector2Int cellIndex)
     {
-
+        return m_Grid.GetCellCenterWorld((Vector3Int)cellIndex);
     }
 }
