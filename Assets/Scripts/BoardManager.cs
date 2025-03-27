@@ -76,4 +76,18 @@ public class BoardManager : MonoBehaviour
     {
         return m_Grid.GetCellCenterWorld((Vector3Int)cellIndex);
     }
+
+    // 특정 셀의 정보를 반환하는 함수 (맵 밖의 좌표를 요청하면 null 반환)
+    public CellData GetCellData(Vector2Int cellIndex)
+    {
+        // 맵의 범위를 벗어난 경우 null 반환
+        if (cellIndex.x < 0 || cellIndex.x >= width
+            || cellIndex.y < 0 || cellIndex.y >= height)
+        {
+            return null;
+        }
+
+        // 해당 위치의 셀 데이터 반환
+        return m_BoardData[cellIndex.x, cellIndex.y];
+    }
 }
